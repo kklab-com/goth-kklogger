@@ -30,6 +30,23 @@ var level = TraceLevel
 
 type Level logrus.Level
 
+func (l Level) String() string {
+	switch l {
+	case TraceLevel:
+		return "TRACE"
+	case DebugLevel:
+		return "DEBUG"
+	case InfoLevel:
+		return "INFO"
+	case WarnLevel:
+		return "WARN"
+	case ErrorLevel:
+		return "ERROR"
+	default:
+		return ""
+	}
+}
+
 const (
 	TraceLevel = Level(logrus.TraceLevel)
 	DebugLevel = Level(logrus.DebugLevel)
