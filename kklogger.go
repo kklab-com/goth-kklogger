@@ -129,8 +129,16 @@ func _GetLogEntry(severity string) *logrus.Entry {
 	return entry
 }
 
-func _Log(logLevel Level, args ...interface{}) {
+func LogJ(logLevel Level, typeName string, obj interface{}) {
+	Log(logLevel, NewJsonMsg(typeName, obj))
+}
+
+func Log(logLevel Level, args ...interface{}) {
 	_Init()
+	if !logrus.IsLevelEnabled(logrus.Level(logLevel)) {
+		return
+	}
+
 	if len(args) > 1 {
 		args = []interface{}{args}
 	}
@@ -177,122 +185,62 @@ func _Log(logLevel Level, args ...interface{}) {
 }
 
 func Trace(args ...interface{}) {
-	if !logrus.IsLevelEnabled(logrus.TraceLevel) {
-		return
-	}
-
-	_Log(TraceLevel, args...)
+	Log(TraceLevel, args...)
 }
 
 func TraceJ(typeName string, obj interface{}) {
-	if !logrus.IsLevelEnabled(logrus.TraceLevel) {
-		return
-	}
-
-	Trace(NewJsonMsg(typeName, obj))
+	LogJ(TraceLevel, typeName, obj)
 }
 
 func TraceF(f func() interface{}) {
-	if !logrus.IsLevelEnabled(logrus.TraceLevel) {
-		return
-	}
-
 	go Trace(f())
 }
 
 func Debug(args ...interface{}) {
-	if !logrus.IsLevelEnabled(logrus.DebugLevel) {
-		return
-	}
-
-	_Log(DebugLevel, args...)
+	Log(DebugLevel, args...)
 }
 
 func DebugJ(typeName string, obj interface{}) {
-	if !logrus.IsLevelEnabled(logrus.DebugLevel) {
-		return
-	}
-
-	Debug(NewJsonMsg(typeName, obj))
+	LogJ(DebugLevel, typeName, obj)
 }
 
 func DebugF(f func() interface{}) {
-	if !logrus.IsLevelEnabled(logrus.DebugLevel) {
-		return
-	}
-
 	go Debug(f())
 }
 
 func Info(args ...interface{}) {
-	if !logrus.IsLevelEnabled(logrus.InfoLevel) {
-		return
-	}
-
-	_Log(InfoLevel, args...)
+	Log(InfoLevel, args...)
 }
 
 func InfoJ(typeName string, obj interface{}) {
-	if !logrus.IsLevelEnabled(logrus.InfoLevel) {
-		return
-	}
-
-	Info(NewJsonMsg(typeName, obj))
+	LogJ(InfoLevel, typeName, obj)
 }
 
 func InfoF(f func() interface{}) {
-	if !logrus.IsLevelEnabled(logrus.InfoLevel) {
-		return
-	}
-
 	go Info(f())
 }
 
 func Warn(args ...interface{}) {
-	if !logrus.IsLevelEnabled(logrus.WarnLevel) {
-		return
-	}
-
-	_Log(WarnLevel, args...)
+	Log(WarnLevel, args...)
 }
 
 func WarnJ(typeName string, obj interface{}) {
-	if !logrus.IsLevelEnabled(logrus.WarnLevel) {
-		return
-	}
-
-	Warn(NewJsonMsg(typeName, obj))
+	LogJ(WarnLevel, typeName, obj)
 }
 
 func WarnF(f func() interface{}) {
-	if !logrus.IsLevelEnabled(logrus.WarnLevel) {
-		return
-	}
-
 	go Warn(f())
 }
 
 func Error(args ...interface{}) {
-	if !logrus.IsLevelEnabled(logrus.ErrorLevel) {
-		return
-	}
-
-	_Log(ErrorLevel, args...)
+	Log(ErrorLevel, args...)
 }
 
 func ErrorJ(typeName string, obj interface{}) {
-	if !logrus.IsLevelEnabled(logrus.ErrorLevel) {
-		return
-	}
-
-	Error(NewJsonMsg(typeName, obj))
+	LogJ(ErrorLevel, typeName, obj)
 }
 
 func ErrorF(f func() interface{}) {
-	if !logrus.IsLevelEnabled(logrus.ErrorLevel) {
-		return
-	}
-
 	go Error(f())
 }
 
