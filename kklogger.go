@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"path"
 	"strings"
 	"sync"
 	"time"
@@ -11,7 +12,6 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-var defaultLoggerPath = "alloc/logs/"
 var defaultEnvironment = "default"
 var LoggerPath = defaultLoggerPath
 var Environment = defaultEnvironment
@@ -63,7 +63,7 @@ func _Init() {
 	once.Do(func() {
 		e := os.MkdirAll(LoggerPath, 0755)
 		if e == nil {
-			logFile, e := os.OpenFile(fmt.Sprintf("%s/current.log", LoggerPath),
+			logFile, e := os.OpenFile(path.Join(LoggerPath, "current.log"),
 				os.O_CREATE|os.O_APPEND|os.O_RDWR, 0755)
 			if e != nil {
 				println(e.Error())
