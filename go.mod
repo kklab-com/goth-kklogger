@@ -1,8 +1,7 @@
 module github.com/kklab-com/goth-kklogger
 
-go 1.14
+go 1.22
 
-require (
-	github.com/sirupsen/logrus v1.8.1
-	golang.org/x/sys v0.0.0-20191228213918-04cbcbbfeed8 // indirect
-)
+require github.com/sirupsen/logrus v1.9.3
+
+require golang.org/x/sys v0.30.0 // indirect

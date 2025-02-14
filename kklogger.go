@@ -17,11 +17,11 @@ var LoggerPath = defaultLoggerPath
 var Environment = defaultEnvironment
 var AsyncWriteChan = make(chan *AsyncBlob)
 var AsyncWrite = true
-var Shutdown = false
 var HandOver = false
 var ReportCaller = true
 var loggerHooks []LoggerHook
 var asyncStarted = false
+var asyncShutdownChan = make(chan bool)
 var file *os.File
 var once sync.Once
 var entryMaps = map[string]*logrus.Entry{}
@@ -89,6 +89,10 @@ func _Init() {
 
 		HandOver = false
 	})
+}
+
+func Shutdown() {
+	asyncShutdownChan <- true
 }
 
 type AsyncBlob struct {
@@ -331,8 +335,10 @@ func SimpleJsonMsg(data interface{}) *JsonMsg {
 }
 
 func asyncWriteWorker() {
-	for {
+	for done := false; !done; {
 		select {
+		case <-asyncShutdownChan:
+			done = true
 		case blob := <-AsyncWriteChan:
 			if HandOver {
 				t := time.NewTicker(time.Second)
@@ -351,10 +357,6 @@ func asyncWriteWorker() {
 				_RunHooks(blob.logLevel, cast...)
 			} else {
 				_RunHooks(blob.logLevel, blob.args)
-			}
-		case <-time.After(time.Millisecond):
-			if Shutdown {
-				return
 			}
 		}
 	}
